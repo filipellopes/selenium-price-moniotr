@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import time
 
@@ -7,17 +8,17 @@ ULTIMO_VALOR_ARQUIVO = 'ultimo_valor.txt'
 
 def obter_valor_produto():
     options = Options()
-    options.add_argument("--headless")  # Comente essa linha se quiser ver o navegador abrir
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
+    options.binary_location = "/usr/bin/chromium"
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 
-
-    driver = webdriver.Chrome(options=options)
+    service = Service("/usr/lib/chromium/chromedriver")
+    driver = webdriver.Chrome(service=service, options=options)
 
     try:
         driver.get("https://www.fadel.io/missioncontrolplus")
-        time.sleep(5)  # Espera a página carregar
-
+        time.sleep(5)
         elemento = driver.find_element(By.XPATH, "/html/body/section[2]/div/div/nav/a[1]/strong/span")
         valor = elemento.text
         print(f"✅ Valor encontrado: {valor}")
@@ -50,4 +51,3 @@ def verificar_e_notificar():
 
 if __name__ == "__main__":
     verificar_e_notificar()
-  
